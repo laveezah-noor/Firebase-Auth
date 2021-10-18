@@ -1,25 +1,51 @@
 import logo from './logo.svg';
 import './App.css';
+import {
+  BrowserRouter as Router, 
+  Switch, Link, 
+  Route, useRouteMatch, useParams, useHistory} from 'react-router-dom'
+import Login from './Login'
+import Signin from './Signin';
 
 function App() {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route path={'/'} exact>
+            <LandingPage/>
+          </Route>
+          <Route path={'/login'} component={Login}/>
+          <Route path={'/register'} component={Signin}/>
+        </Switch>
+      </Router>
     </div>
   );
 }
+
+
+function LandingPage() {
+  return (
+    <div>
+      <header className="App-header">
+              <img src={logo} className="App-logo" alt="logo" />
+              <p>
+                React App with FireBase Authentication
+              </p>
+              <Link
+                className="App-link"
+                to={'/login'}
+                // href="https://reactjs.org"
+                // target="_blank"
+                // rel="noopener noreferrer"
+              >
+                Login
+              </Link>
+            </header>
+    </div>
+  )
+}
+
 
 export default App;
