@@ -406,13 +406,13 @@
       -webkit-transform: scale(1.3) translateZ(0);
       transform: scale(1.3) translateZ(0); }
   
-  .zmdi-facebook {
+  .bi-facebook {
     background: #3b5998; }
   
-  .zmdi-twitter {
+  .bi-twitter {
     background: #1da0f2; }
   
-  .zmdi-google {
+  .bi-google {
     background: #e72734; }
   
   .signin-form {

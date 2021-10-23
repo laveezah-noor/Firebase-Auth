@@ -1,6 +1,52 @@
 import React from 'react'
+import { 
+    getAuth, 
+    onAuthStateChanged,
+    updateProfile,
+    signInWithPopup, 
+    GoogleAuthProvider,
+    createUserWithEmailAndPassword
+     } from "firebase/auth";
+import {firebase} from './config'
 
 export default function Signin() {
+    const auth = getAuth();
+    const SigninWithGoogle = () =>{
+        console.log(firebase);
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider).then(function(result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            console.log(user)
+            // ...
+          }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+        console.log('Google Login')
+    
+    }
+    const signInWithEmailAndPassword = (email, password) =>{
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+          });
+    }
     const [UserName,setUserName] = React.useState('')
     const [UserPassword,setUserPassword] = React.useState('')
     const [FirstName,setFirstName] = React.useState('')
@@ -30,36 +76,39 @@ export default function Signin() {
         }
     }
     const onSubmit = () =>{
-        if (UserName != '' && UserPassword != '' && FirstName != ''){
+        if (Email != '' && UserPassword != '' && FirstName != ''){
             if (EmailStatus != false){
-            //     axios
-            //     .post(`http://localhost:4000/addUser`, {
-            //       UserName,
-            //       UserPassword,
-            //       Role,
-            //       FirstName,
-            //       LastName,
-            //       Contact,
-            //       Email
-            //     })
-            //     .then((result) => result.data)
-            //     .then((result)=>{
-            //       console.log(result);
-            //       if (result.code == 1062){
-            //           setMessage(result.type+' not available')
-            //       } else {
-            //           setMessage('')
-            //           alert(result)
-            //           window.location.pathname = '/login'
-                  
-            //       }
-            //   }
-            //       ,(error)=>{
-            //       alert('Failed');
-            //   })
+            signInWithEmailAndPassword(Email,UserPassword)
             }} else {
                 setMessage('Fill the required fields')
             }
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                  // User is signed in, see docs for a list of available properties
+                  // https://firebase.google.com/docs/reference/js/firebase.User
+                  const uid = user.uid;
+                  updateProfile(auth.currentUser, {
+
+                    displayName: FirstName,
+                    // photoURL: "https://example.com/jane-q-user/profile.jpg"
+
+                  }).then(function() {
+
+                    // Profile updated successfully!
+                    //  "NEW USER NAME"
+
+                    var displayName = user.displayName;
+                    // "https://example.com/jane-q-user/profile.jpg"
+                    var photoURL = user.photoURL;
+                    console.log(user)
+                  }, function(error) {
+                    // An error happened.
+                  }); 
+                } else {
+                  // User is signed out
+                  // ...
+                }
+              });
     }
     
     return (
@@ -122,16 +171,19 @@ export default function Signin() {
                                 <div class="alert alert-danger" role="alert">{Message}</div>
                                 :null}
                     <div className="form-group">
-                        <button type="submit"  onClick={()=>onSubmit()}
+                        <button type="submit"  
+                        onClick={()=>onSubmit()}
                         name="signin" className="form-submit btn">Sign in</button>
                     </div>
                 </div>
                 <div className="social-login">
                     <span className="social-label">Or login with</span>
                     <ul className="socials">
-                        <li><a href="#"><i className="display-flex-center zmdi zmdi-facebook"></i></a></li>
-                        <li><a href="#"><i className="display-flex-center zmdi zmdi-twitter"></i></a></li>
-                        <li><a href="#"><i className="display-flex-center zmdi zmdi-google"></i></a></li>
+                        <li><a href="#"><i className="display-flex-center bi bi-facebook"></i></a></li>
+                        <li><a href="#"><i className="display-flex-center bi bi-twitter"></i></a></li>
+                        <li><a href="#" 
+                        onClick={()=>SigninWithGoogle()}
+                        ><i className="display-flex-center bi bi-google"></i></a></li>
                     </ul>
                 </div>
         </div>

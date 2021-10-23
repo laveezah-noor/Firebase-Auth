@@ -6,6 +6,7 @@ import {
   Route, useRouteMatch, useParams, useHistory} from 'react-router-dom'
 import Login from './Login'
 import Signin from './Signin';
+import Landing from './Landing';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           </Route>
           <Route path={'/login'} component={Login}/>
           <Route path={'/register'} component={Signin}/>
+          <Route path={'/home'} component={Landing}/>
         </Switch>
       </Router>
     </div>
